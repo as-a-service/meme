@@ -12,7 +12,7 @@ import (
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	q := r.URL.Query()
-	log.Print("New meme %s", q)
+	log.Print("New meme ", q)
 
 	// Download image
 	imgURL := q.Get("image")
