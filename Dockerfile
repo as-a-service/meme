@@ -1,12 +1,15 @@
-# Use the offical Golang image to create a build artifact.
-# This is based on Debian and sets the GOPATH to /go.
-# https://hub.docker.com/_/golang
 FROM golang as builder
 
 ENV GO111MODULE=on
 
-# Copy local code to the container image.
 WORKDIR /go/src/github.com/steren/memegen
+
+# Download dependencies (for faster builds when deps do not change)
+COPY go.mod .
+COPY go.sum .
+RUN go mod download
+
+# Copy local code
 COPY . .
 
 # Build the outyet command inside the container.
