@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/fogleman/gg"
+	"image"
 	"image/jpeg"
 	"log"
 	"net/http"
@@ -10,16 +11,34 @@ import (
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	log.Print("New meme")
+	q := r.URL.Query()
+	log.Print("New meme %s", q)
 
-	const S = 1024
+	// Download image
+	imgURL := q.Get("image")
+	if imgURL == "" {
+		fmt.Fprintf(w, "Please provide an image with ?image=URL")
+		return
+	}
+	resp, err := http.Get(imgURL)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer resp.Body.Close()
 
-	dc := gg.NewContext(S, S)
-	dc.SetRGB(1, 1, 1)
-	dc.Clear()
+	im, _, err := image.Decode(resp.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	bounds := im.Bounds()
+	width := bounds.Dx()
+	height := bounds.Dy()
+
+	dc := gg.NewContextForImage(im)
 
 	dc.SetRGB(0, 0, 0)
-	dc.DrawStringAnchored("Hello, world!", S/2, S/2, 0.5, 0.5)
+	dc.DrawStringAnchored("Hello, world!", float64(width/2), float64(height/2), 0.5, 0.5)
 
 	w.Header().Set("Content-Type", "image/jpeg")
 	jpeg.Encode(w, dc.Image(), nil)
