@@ -14,6 +14,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	q := r.URL.Query()
 	log.Print("New meme ", q)
 
+    text := q.Get("text")
+
 	// Download image
 	imgURL := q.Get("image")
 	if imgURL == "" {
@@ -25,7 +27,6 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	defer resp.Body.Close()
-
 	im, _, err := image.Decode(resp.Body)
 	if err != nil {
 		log.Fatal(err)
@@ -37,8 +38,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	dc := gg.NewContextForImage(im)
 
-	dc.SetRGB(0, 0, 0)
-	dc.DrawStringAnchored("Hello, world!", float64(width/2), float64(height/2), 0.5, 0.5)
+	dc.SetRGB(1, 1, 1)
+	dc.DrawStringAnchored(text, float64(width/2), float64(height/2), 0.5, 0.5)
 
 	w.Header().Set("Content-Type", "image/jpeg")
 	jpeg.Encode(w, dc.Image(), nil)
