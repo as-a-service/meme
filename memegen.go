@@ -12,6 +12,23 @@ import (
 	"github.com/fogleman/gg"
 )
 
+func createMeme(im image.Image, textTop string, textBottom string) image.Image {
+	bounds := im.Bounds()
+	width := bounds.Dx()
+	height := bounds.Dy()
+
+	dc := gg.NewContextForImage(im)
+
+	dc.SetRGB(1, 1, 1)
+	if err := dc.LoadFontFace("/usr/share/fonts/truetype/msttcorefonts/impact.ttf", 96); err != nil {
+		panic(err)
+	}
+	dc.DrawStringAnchored(strings.ToUpper(textTop), float64(width/2), float64(height/4), 0.5, 0.5)
+	dc.DrawStringAnchored(strings.ToUpper(textBottom), float64(width/2), float64(3*height/4), 0.5, 0.5)
+
+	return dc.Image()
+}
+
 func handler(w http.ResponseWriter, r *http.Request) {
 	q := r.URL.Query()
 	log.Print("New meme ", q)
@@ -35,21 +52,10 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	bounds := im.Bounds()
-	width := bounds.Dx()
-	height := bounds.Dy()
-
-	dc := gg.NewContextForImage(im)
-
-	dc.SetRGB(1, 1, 1)
-	if err := dc.LoadFontFace("/usr/share/fonts/truetype/msttcorefonts/impact.ttf", 96); err != nil {
-		panic(err)
-	}
-	dc.DrawStringAnchored(strings.ToUpper(textTop), float64(width/2), float64(height/4), 0.5, 0.5)
-	dc.DrawStringAnchored(strings.ToUpper(textBottom), float64(width/2), float64(3*height/4), 0.5, 0.5)
+	meme := createMeme(im, textTop, textBottom)
 
 	w.Header().Set("Content-Type", "image/jpeg")
-	jpeg.Encode(w, dc.Image(), nil)
+	jpeg.Encode(w, meme, nil)
 }
 
 func main() {
