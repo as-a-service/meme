@@ -5,6 +5,7 @@ import (
 	"image"
 	"image/jpeg"
 	"log"
+	"math"
 	"net/http"
 	"os"
 	"strings"
@@ -16,10 +17,11 @@ func createMeme(im image.Image, textTop string, textBottom string) image.Image {
 	bounds := im.Bounds()
 	width := bounds.Dx()
 	height := bounds.Dy()
+	max := math.Round(float64(width) / 10)
 
 	dc := gg.NewContextForImage(im)
 
-	if err := dc.LoadFontFace("/usr/share/fonts/truetype/msttcorefonts/impact.ttf", 96); err != nil {
+	if err := dc.LoadFontFace("/usr/share/fonts/truetype/msttcorefonts/impact.ttf", max); err != nil {
 		panic(err)
 	}
 
@@ -38,14 +40,14 @@ func createMeme(im image.Image, textTop string, textBottom string) image.Image {
 			x := positionX + float64(dx)
 			ytop := positionTopY + float64(dy)
 			ybottom := positionBottomY + float64(dy)
-			dc.DrawStringAnchored(strings.ToUpper(textTop), x, ytop, 0.5, 0.5)
-			dc.DrawStringAnchored(strings.ToUpper(textBottom), x, ybottom, 0.5, 0.5)
+			dc.DrawStringAnchored(strings.ToUpper(textTop), x, ytop, 0.5, 0)
+			dc.DrawStringAnchored(strings.ToUpper(textBottom), x, ybottom, 0.5, 1)
 		}
 	}
 
 	dc.SetRGB(1, 1, 1)
-	dc.DrawStringAnchored(strings.ToUpper(textTop), positionX, positionTopY, 0.5, 0.5)
-	dc.DrawStringAnchored(strings.ToUpper(textBottom), positionX, positionBottomY, 0.5, 0.5)
+	dc.DrawStringAnchored(strings.ToUpper(textTop), positionX, positionTopY, 0.5, 0)
+	dc.DrawStringAnchored(strings.ToUpper(textBottom), positionX, positionBottomY, 0.5, 1)
 
 	return dc.Image()
 }
@@ -60,7 +62,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	// Download image
 	imgURL := q.Get("image")
 	if imgURL == "" {
-		fmt.Fprintf(w, "Please provide an image with ?image=URL")
+		w.Header().Set("Content-Type", "text/html")
+		fmt.Fprintf(w, "Generate meme by providing an image URL, top and bottom text using query parameters. See <a href=\"/?top=I'm in ur cloud&bottom=creating ur memes&image=https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Cat_on_laptop_-_Just_Browsing.jpg/800px-Cat_on_laptop_-_Just_Browsing.jpg\">example</a>")
 		return
 	}
 	resp, err := http.Get(imgURL)
