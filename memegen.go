@@ -19,12 +19,33 @@ func createMeme(im image.Image, textTop string, textBottom string) image.Image {
 
 	dc := gg.NewContextForImage(im)
 
-	dc.SetRGB(1, 1, 1)
 	if err := dc.LoadFontFace("/usr/share/fonts/truetype/msttcorefonts/impact.ttf", 96); err != nil {
 		panic(err)
 	}
-	dc.DrawStringAnchored(strings.ToUpper(textTop), float64(width/2), float64(height/4), 0.5, 0.5)
-	dc.DrawStringAnchored(strings.ToUpper(textBottom), float64(width/2), float64(3*height/4), 0.5, 0.5)
+
+	positionX := float64(width / 2)
+	positionTopY := float64(height / 6)
+	positionBottomY := float64(5 * height / 6)
+
+	dc.SetRGB(0, 0, 0)
+	n := 6 // "stroke" size
+	for dy := -n; dy <= n; dy++ {
+		for dx := -n; dx <= n; dx++ {
+			if dx*dx+dy*dy >= n*n {
+				// give it rounded corners
+				continue
+			}
+			x := positionX + float64(dx)
+			ytop := positionTopY + float64(dy)
+			ybottom := positionBottomY + float64(dy)
+			dc.DrawStringAnchored(strings.ToUpper(textTop), x, ytop, 0.5, 0.5)
+			dc.DrawStringAnchored(strings.ToUpper(textBottom), x, ybottom, 0.5, 0.5)
+		}
+	}
+
+	dc.SetRGB(1, 1, 1)
+	dc.DrawStringAnchored(strings.ToUpper(textTop), positionX, positionTopY, 0.5, 0.5)
+	dc.DrawStringAnchored(strings.ToUpper(textBottom), positionX, positionBottomY, 0.5, 0.5)
 
 	return dc.Image()
 }
@@ -59,7 +80,6 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-
 	http.HandleFunc("/", handler)
 
 	port := os.Getenv("PORT")
