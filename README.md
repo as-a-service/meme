@@ -7,8 +7,8 @@ Run with `docker run -p 8080:8080 gcr.io/steren-demo/memegen`
 ### URL parameters:
 
 * `image`: URL of the image
-* `text-top`:  text to add at the top of the image
-* `text-bottom`:  text to add at the bottom of the image
+* `top`:  text to add at the top of the image
+* `bottom`:  text to add at the bottom of the image
 
 ## Running the server locally
 

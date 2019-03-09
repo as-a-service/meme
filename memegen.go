@@ -54,8 +54,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	q := r.URL.Query()
 	log.Print("New meme ", q)
 
-	textTop := q.Get("text-top")
-	textBottom := q.Get("text-bottom")
+	textTop := q.Get("top")
+	textBottom := q.Get("bottom")
 
 	// Download image
 	imgURL := q.Get("image")
