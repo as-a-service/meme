@@ -26,6 +26,13 @@ RUN apk --no-cache add msttcorefonts-installer fontconfig && \
     update-ms-fonts && \
     fc-cache -f
 
+# Install certificates for HTTPS
+RUN apk update \
+        && apk upgrade \
+        && apk add --no-cache \
+        ca-certificates \
+        && update-ca-certificates 2>/dev/null || true
+
 # Copy the binary to the production image from the builder stage.
 COPY --from=builder /go/src/github.com/steren/memegen/memegen /memegen
 
