@@ -22,6 +22,5 @@ The following container image always reflects the latest version of the `master`
 
 ## TODO
 
-* Use Impact font
 * Simply use `golang.org/x/image/font`? (see [StackOverflow](https://stackoverflow.com/questions/38299930/how-to-add-a-simple-text-label-to-an-image-in-go))
 * Handle HTTPS images

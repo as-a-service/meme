@@ -21,6 +21,11 @@ RUN CGO_ENABLED=0 GOOS=linux go build -v -o memegen
 # https://docs.docker.com/develop/develop-images/multistage-build/#use-multi-stage-builds
 FROM alpine
 
+# Install fonts
+RUN apk --no-cache add msttcorefonts-installer fontconfig && \
+    update-ms-fonts && \
+    fc-cache -f
+
 # Copy the binary to the production image from the builder stage.
 COPY --from=builder /go/src/github.com/steren/memegen/memegen /memegen
 

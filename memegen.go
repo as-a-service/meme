@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/fogleman/gg"
 )
@@ -41,8 +42,11 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	dc := gg.NewContextForImage(im)
 
 	dc.SetRGB(1, 1, 1)
-	dc.DrawStringAnchored(textTop, float64(width/2), float64(height/4), 0.5, 0.5)
-	dc.DrawStringAnchored(textBottom, float64(width/2), float64(3*height/4), 0.5, 0.5)
+	if err := dc.LoadFontFace("/usr/share/fonts/truetype/msttcorefonts/impact.ttf", 96); err != nil {
+		panic(err)
+	}
+	dc.DrawStringAnchored(strings.ToUpper(textTop), float64(width/2), float64(height/4), 0.5, 0.5)
+	dc.DrawStringAnchored(strings.ToUpper(textBottom), float64(width/2), float64(3*height/4), 0.5, 0.5)
 
 	w.Header().Set("Content-Type", "image/jpeg")
 	jpeg.Encode(w, dc.Image(), nil)
