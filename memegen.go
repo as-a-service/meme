@@ -2,19 +2,21 @@ package main
 
 import (
 	"fmt"
-	"github.com/fogleman/gg"
 	"image"
 	"image/jpeg"
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/fogleman/gg"
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	q := r.URL.Query()
 	log.Print("New meme ", q)
 
-    text := q.Get("text")
+	textTop := q.Get("text-top")
+	textBottom := q.Get("text-bottom")
 
 	// Download image
 	imgURL := q.Get("image")
@@ -39,7 +41,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	dc := gg.NewContextForImage(im)
 
 	dc.SetRGB(1, 1, 1)
-	dc.DrawStringAnchored(text, float64(width/2), float64(height/2), 0.5, 0.5)
+	dc.DrawStringAnchored(textTop, float64(width/2), float64(height/4), 0.5, 0.5)
+	dc.DrawStringAnchored(textBottom, float64(width/2), float64(3*height/4), 0.5, 0.5)
 
 	w.Header().Set("Content-Type", "image/jpeg")
 	jpeg.Encode(w, dc.Image(), nil)
