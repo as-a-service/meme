@@ -2,7 +2,7 @@
 
 A simple web service that generates a meme image given text and an image URL. 
 
-Run with `docker run -p 8080:8080 gcr.io/steren-demo/memegen`
+Run with `docker run -p 8080:8080 gcr.io/as-a-service-dev/memegen`
 
 ### URL parameters:
 
@@ -18,4 +18,4 @@ Run with `docker run -p 8080:8080 gcr.io/steren-demo/memegen`
 
 ## Deploy to your server
 
-The following container image always reflects the latest version of the `master` branch of this repo: `gcr.io/steren-demo/memegen`
+The following container image always reflects the latest version of the `master` branch of this repo: `gcr.io/as-a-service-dev/memegen`
