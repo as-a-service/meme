@@ -21,3 +21,5 @@ Run with `docker run -p 8080:8080 gcr.io/as-a-service-dev/memegen`
 ## Deploy to your server
 
 The following container image always reflects the latest version of the `master` branch of this repo: `gcr.io/as-a-service-dev/memegen`
+
+![Cloud Build](https://badger-l7zawt5jsq-uw.a.run.app/build/status?project=as-a-service-dev&id=fdd11a9f-8f5d-46f2-974c-0ab041c02b30)
