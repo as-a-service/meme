@@ -1,4 +1,4 @@
-module "https://github.com/steren/memegen"
+module github.com/steren/memegen
 
 require (
 	github.com/fogleman/gg v1.2.0
