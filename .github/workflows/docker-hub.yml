@@ -1,0 +1,42 @@
+# Dieser Workflow verwendet Aktionen, die nicht von GitHub zertifiziert sind.
+# Sie werden von einem Drittanbieter bereitgestellt und unterliegen
+# separaten Nutzungsbedingungen, Datenschutzbestimmungen und Support
+# Onlinedokumentation.
+
+# GitHub empfiehlt, Aktionen an einen Commit-SHA anzuheften.
+# Um eine neuere Version zu erhalten, musst du den SHA aktualisieren.
+# Du kannst auch auf ein Tag oder einen Branch verweisen, aber die Aktion kann sich ohne Vorwarnung ändern.
+
+name: Publish Docker image
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  push_to_registry:
+    name: Push Docker image to Docker Hub
+    runs-on: [self-hosted]
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+      
+      - name: Log in to Docker Hub
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          username: ${{ secrets.zigzockt }}
+          password: ${{ secrets.nFRUEzfo%NtmWPj^Uf5G3qJ3!GN5XGwVVh!w7%Pt5C#QHCa&CA5wEYTUE!Kb3@&qh4f**G!P2@84eLxGXNEpg7DM!46c5e*C%a&57ncbLouf@53@j&z!gVwb4dDY39*v }}
+      
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: zigzockt/memegen
+      
+      - name: Build and push Docker image
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
