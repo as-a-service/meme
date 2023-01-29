@@ -61,9 +61,48 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	// Download image
 	imgURL := q.Get("image")
+
 	if imgURL == "" {
 		w.Header().Set("Content-Type", "text/html")
-		fmt.Fprintf(w, "Generate meme by providing an image URL, top and bottom text using query parameters. See <a href=\"/?top=I'm in ur cloud&bottom=creating ur memes&image=https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Cat_on_laptop_-_Just_Browsing.jpg/800px-Cat_on_laptop_-_Just_Browsing.jpg\">example</a>")
+		fmt.Fprintf(w, `<html>
+		<body style="	font-family: sans-serif;
+			text-align: center;
+			padding: 3rem;
+			font-size: 1.125rem;
+			line-height: 1.5;
+			transition: all 725ms ease-in-out;>
+	
+		<h1 style="	font-size: 2rem;
+			font-weight: bolder;
+			margin-bottom: 1rem;">
+			Generate meme by providing an image URL</h1>
+		
+		<p style="	margin-bottom: 1rem;
+			color: tomato;">
+		top and bottom text using query parameters.</p>
+		
+		<ul>
+		  <li>image: URL of the image</li>
+		  <li>top: text to add at the top of the image</li>
+		  <li>bottom: text to add at the bottom of the image</li>
+		</ul>
+	
+		<br>
+		
+		<a href="/?top=I'm in ur cloud&bottom=creating ur memes&image=https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Cat_on_laptop_-_Just_Browsing.jpg/800px-Cat_on_laptop_-_Just_Browsing.jpg">
+		<button style="	cursor: pointer;
+		appearance: none;
+		border-radius: 4px;
+		font-size: 1.25rem;
+		padding: 0.75rem 1rem;
+		border: 1px solid navy;
+		background-color: dodgerblue;
+		color: white;">
+		Example</button>
+		</a>
+		</body>
+	
+		</html>`)
 		return
 	}
 	resp, err := http.Get(imgURL)
